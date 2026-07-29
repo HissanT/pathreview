@@ -16,3 +16,21 @@
 **Setup confirmation:** [X] App runs locally at localhost:5173
 
 **Cohort ledger:** [X] Issue added to cohort ledger
+
+**Reproduction note:**
+I reproduced the stale session-state issue locally with a fake in-memory session store and fake agent tools. I ran two reviews with the same `profile_id`: the first review included `readme_content`, so `readme_scorer` and `market_analyzer` were saved into session state; the second review had no tool inputs, so no tools ran, but the persisted session still kept the old `readme_scorer` and `market_analyzer` entries. This confirms the review boundary does not clear or scope stored tool results.
+
+Reproduction command:
+
+```powershell
+$env:PYTHONPATH='C:\Users\hissa\Desktop\pathreview\pathreview'; C:\Users\hissa\Desktop\pathreview\pathreview\.venv\Scripts\python.exe .\work\reproduce_pathreview_session_state.py
+```
+
+Observed output:
+
+```text
+first tool_results: ['market_analyzer', 'readme_scorer']
+second tool_results: []
+persisted session keys after second review: ['market_analyzer', 'readme_scorer']
+stale readme result remains: True
+```
