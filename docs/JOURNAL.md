@@ -34,3 +34,17 @@ second tool_results: []
 persisted session keys after second review: ['market_analyzer', 'readme_scorer']
 stale readme result remains: True
 ```
+
+## Week 8 — Reproduction & solution planning
+
+**Reproduction commit link:** [ef28ca4](https://github.com/HissanT/pathreview/commit/ef28ca45084dc0c1b8f36bee477bdda01f73db92)
+
+**Reproduction summary:**
+I reproduced the issue locally by running two orchestrator reviews with the same `profile_id` and a fake in-memory session store. The first review saved `readme_scorer` and `market_analyzer` results, and the second review had no tool inputs, but the persisted session still kept those old tool results.
+
+**PLAN.md link:** [PLAN.md](https://github.com/HissanT/pathreview/blob/fix/43-uncleared-session-state/PLAN.md)
+
+**Walkthrough video (recommended):** Not recorded; the reproduction steps and observed output are documented in the reproduction commit.
+
+**Blockers or open questions:**
+The main open question is whether Week 9 should clear session state at the start of each review or add a review-scoped session key once the real orchestration path is wired into `process_review`.
