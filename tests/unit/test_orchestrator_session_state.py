@@ -66,7 +66,7 @@ class TestOrchestratorSessionState:
                 "market_analyzer": FakeMarketAnalyzer(),
                 "readme_scorer": readme_scorer,
             },
-            session_store=cast(Any, session_store),
+            session_store=cast("Any", session_store),
         )
 
         first_result = orchestrator.run(
