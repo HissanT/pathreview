@@ -82,3 +82,33 @@ I added `tests/unit/test_orchestrator_session_state.py`. The tests cover two cas
 
 **Validation notes:**
 The focused orchestrator test passed with 2 tests, targeted ruff passed on the touched files, and targeted black passed on the touched files. Before the fix, the full unit suite had 53 failures; after the fix, it still had 53 failures, and the 2 new orchestrator tests pass.
+
+## Week 10 — Iteration & reflection
+
+### Reviewer feedback
+
+**Feedback received:** [ ] Yes  [X] No — still awaiting review
+
+**Summary of feedback:**
+No reviewer feedback came in for Summer 2026, so there were no requested changes to address.
+
+**How you responded:**
+
+---
+
+### Reflection
+
+**What was harder than you expected?**
+The hardest part was understanding where the session state actually lived. At first the issue sounded like a simple cache problem, but I had to trace the flow through the orchestrator, the context manager, and the session store to see how old tool results could survive between reviews.
+
+**What did you learn about working in a large codebase?**
+I learned that small bugs can come from the way files connect, not just from one bad line of code. In my own projects I usually know the whole flow already, but in someone else's codebase I had to slow down, read nearby files, check the tests, and make sure the fix matched the existing structure.
+
+**How did AI tools help — and where did they fall short?**
+AI tools helped me search the codebase, explain unfamiliar files, and turn the issue into a clear test and fix. They were less useful for knowing project-specific context automatically, so I still had to verify the behavior locally, read the journal and contribution docs, and make sure the final change was actually scoped to the issue.
+
+**What would you do differently if you started over?**
+I would look for the exact session read/write points earlier and write the failing unit test sooner. That would have made the bug easier to explain and would have kept the planning even more focused from the start.
+
+**What are you most proud of from this module?**
+I am most proud that I reproduced the bug clearly before fixing it. The test shows the real problem in plain terms: a second review for the same profile should not keep tool results from the first review.
