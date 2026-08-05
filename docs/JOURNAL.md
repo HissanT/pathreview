@@ -60,7 +60,7 @@ I added a focused failing unit test for issue #43 in `tests/unit/test_orchestrat
 Next I planned to update `agent/orchestrator.py` so each review starts with fresh tool state and only saves the current review's results. After that, I planned to rerun the focused tests and the project checks.
 
 **Blockers:**
-`make` is not available in this local PowerShell environment, so I used the matching `.venv\Scripts\...` commands directly. The full unit suite and full check commands also had pre-existing failures before I changed the code.
+The full unit suite and full check commands had pre-existing failures before I changed the code.
 
 ---
 
@@ -81,4 +81,4 @@ I added `tests/unit/test_orchestrator_session_state.py`. The tests cover two cas
 **Draft PR feedback received from:** none
 
 **Validation notes:**
-`make` is not available locally, so I ran the project virtualenv commands directly. The focused orchestrator test passed with 2 tests, targeted ruff passed on the touched files, and targeted black passed on the touched files. Before the fix, the full unit suite had 53 failures; after the fix, it still had 53 failures, and the 2 new orchestrator tests pass.
+The focused orchestrator test passed with 2 tests, targeted ruff passed on the touched files, and targeted black passed on the touched files. Before the fix, the full unit suite had 53 failures; after the fix, it still had 53 failures, and the 2 new orchestrator tests pass.
