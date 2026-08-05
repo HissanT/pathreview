@@ -66,7 +66,7 @@ The full unit suite and full check commands had pre-existing failures before I c
 
 ### Check-in 2 (end of week)
 
-**PR link:** Not opened yet; branch is ready at [fix/43-uncleared-session-state](https://github.com/HissanT/pathreview/tree/fix/43-uncleared-session-state)
+**PR link:** [ascherj/pathreview#855](https://github.com/ascherj/pathreview/pull/855)
 
 **Branch:** `fix/43-uncleared-session-state`
 
