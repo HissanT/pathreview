@@ -99,16 +99,26 @@ No reviewer feedback came in for Summer 2026, so there were no requested changes
 ### Reflection
 
 **What was harder than you expected?**
-The hardest part was understanding where the session state actually lived. At first the issue sounded like a simple cache problem, but I had to trace the flow through the orchestrator, the context manager, and the session store to see how old tool results could survive between reviews.
+The hardest part was understanding where the session state actually lived and how it moved through the app. At first the issue sounded like a simple cache problem, but it was not obvious which cache was causing it. I had to trace the flow through `agent/orchestrator.py`, `agent/memory/context_manager.py`, and `agent/memory/session_store.py` before the bug made sense.
+
+What surprised me was that the problem was not that the tools were broken. The tools could run correctly, but the app was saving their results in a way that let old results stay around. The orchestrator loaded previous session data, added the new tool results on top of it, and saved it again. That meant a second review for the same profile could still have information from the first review. Figuring that out took more careful reading than I expected.
 
 **What did you learn about working in a large codebase?**
-I learned that small bugs can come from the way files connect, not just from one bad line of code. In my own projects I usually know the whole flow already, but in someone else's codebase I had to slow down, read nearby files, check the tests, and make sure the fix matched the existing structure.
+I learned that small bugs can come from the way files connect, not just from one bad line of code. In my own projects I usually know the whole flow already because I wrote it. In someone else's codebase, I had to slow down and understand the existing structure before changing anything.
+
+This project also showed me that a fix should be as small as possible. It would have been easy to rewrite more of the session store or change the whole review flow, but that would have added risk. The better approach was to find the exact boundary between one review and the next review, then make sure old state did not cross that boundary. I also learned that tests are important for explaining the fix. The new test makes the bug clear without needing a long explanation.
 
 **How did AI tools help — and where did they fall short?**
-AI tools helped me search the codebase, explain unfamiliar files, and turn the issue into a clear test and fix. They were less useful for knowing project-specific context automatically, so I still had to verify the behavior locally, read the journal and contribution docs, and make sure the final change was actually scoped to the issue.
+AI tools helped me move faster when searching the codebase and understanding unfamiliar files. They were useful for finding session-related code, explaining what the orchestrator was doing, and helping me turn the issue into a clear reproduction and unit test. They also helped me explain the bug in plain language, which made the journal and PR easier to write.
+
+Where AI fell short was project-specific judgment. AI could suggest possible fixes, but it could not know which fix was safest without actually reading this repo and checking the behavior. I still had to reproduce the issue locally, compare the before-and-after test results, and make sure I was not changing unrelated parts of the app. The AI was a useful guide, but I still had to verify everything myself.
 
 **What would you do differently if you started over?**
-I would look for the exact session read/write points earlier and write the failing unit test sooner. That would have made the bug easier to explain and would have kept the planning even more focused from the start.
+If I started over, I would write the failing unit test earlier. Once I had the test, the issue became much easier to understand because it showed the problem directly: one review saved tool results, and the next review could still keep those old results. That test also made the fix easier to trust.
+
+I would also map the code path earlier before writing too much planning text. I understood the general issue from the beginning, but I could have found the exact session read and write points sooner. Starting with the exact files and exact behavior would have made the process smoother.
 
 **What are you most proud of from this module?**
-I am most proud that I reproduced the bug clearly before fixing it. The test shows the real problem in plain terms: a second review for the same profile should not keep tool results from the first review.
+I am most proud that I reproduced the bug clearly before fixing it. I did not just change code based on the issue description. I proved the problem locally with fake tools and a fake session store, then turned that reproduction into a real unit test.
+
+I am also proud that the final fix is simple. The main idea is easy to explain: a new review should start fresh, and it should only save the current review's tool results. That makes the app more reliable without changing unrelated parts of the system.
